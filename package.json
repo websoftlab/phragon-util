@@ -1,0 +1,40 @@
+{
+	"name": "phragon-util",
+	"private": true,
+	"version": "1.0.0",
+	"description": "Utilities for websoftlab projects",
+	"scripts": {
+		"boilerplate": "phragon-script boilerplate",
+		"prettier": "phragon-script prettier",
+		"increment": "phragon-script increment",
+		"build": "phragon-script build",
+		"release": "phragon-script release --channel global",
+		"release-local": "phragon-script release --channel local"
+	},
+	"workspaces": [
+		"packages/*"
+	],
+	"keywords": [
+		"phragon",
+		"phragon-util"
+	],
+	"author": "phragon@websoftlab.com",
+	"license": "MIT",
+	"dependencies": {
+		"@phragon-util/script": "^0.0.2"
+	},
+	"devDependencies": {
+		"@types/node": "^14.14.31"
+	},
+	"browserslist": {
+		"production": [
+			"> 1%"
+		],
+		"node": [
+			"node 14"
+		]
+	},
+	"engines": {
+		"node": ">=14.0.0"
+	}
+}
