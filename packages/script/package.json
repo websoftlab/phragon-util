@@ -1,0 +1,54 @@
+{
+	"name": "@phragon-util/script",
+	"version": "1.0.0",
+	"author": "phragon@websoftlab.com",
+	"license": "MIT",
+	"keywords": ["phragon", "phragon-chakra", "chakra"],
+	"scripts": {
+		"build": "node ../../scripts/lib/build.js",
+		"prettier": "node ../../scripts/lib/build-prettier.js"
+	},
+	"dependencies": {
+		"@phragon/cli-commander": "^0.1.0-beta.11",
+		"@babel/cli": "^7.21.0",
+		"@babel/core": "^7.21.0",
+		"@babel/node": "^7.20.7",
+		"@babel/plugin-transform-typescript": "^7.21.0",
+		"@babel/plugin-proposal-class-properties": "^7.18.6",
+		"@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+		"@babel/plugin-proposal-private-methods": "^7.18.6",
+		"@babel/plugin-proposal-decorators": "^7.21.0",
+		"@babel/plugin-transform-runtime": "^7.21.0",
+		"@babel/preset-env": "^7.20.2",
+		"@babel/preset-react": "^7.18.6",
+		"@babel/preset-typescript": "^7.21.0",
+		"@babel/runtime": "^7.21.0",
+		"babel-plugin-optimize-clsx": "^2.6.2",
+		"babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+		"prompts": "^2.4.2",
+		"rimraf": "^3.0.2",
+		"cross-spawn": "^7.0.3",
+		"deepmerge": "^4.2.2",
+		"prettier": "^2.8.4",
+		"typescript": "^4.9.5"
+	},
+	"devDependencies": {
+		"@types/node": "^14.14.31",
+		"@types/prompts": "^2.4.2",
+		"@types/rimraf": "^3.0.2",
+		"@types/cross-spawn": "^6.0.2",
+		"@types/prettier": "^2.7.2"
+	},
+	"exports": {
+		".": {
+			"require": "./build/index.js"
+		}
+	},
+	"types": "build/index.d.ts",
+	"typesVersions": {
+		"*": {
+			"build/index.d.ts": ["src/index.ts"],
+			"*": ["src/*"]
+		}
+	}
+}
