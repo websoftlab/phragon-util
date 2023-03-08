@@ -6,6 +6,7 @@ import { loadPackages } from "../../workspace";
 import cmd from "../../cmd";
 import spawn from "cross-spawn";
 import cmdData from "../../cmd-data";
+import * as process from "process";
 
 function createNpmArgs(args: string | string[], channel: ConfigChannel) {
 	if (typeof args === "string") {
@@ -47,33 +48,76 @@ async function setNpmUser(channel: ConfigChannel, logout = false) {
 		stdio: ["pipe", "pipe", "inherit"],
 	});
 
-	return new Promise<void>((resolve, reject) => {
-		proc.stdout?.on("data", (chunk) => {
-			chunk = chunk && chunk.toString().trim();
-			switch (chunk) {
-				case "Username:":
-					proc.stdin?.write(channel.user + "\n");
-					return;
-				case "Password:":
-					proc.stdin?.write(data.password + "\n");
-					return;
-			}
-			if (chunk.startsWith("Email")) {
-				proc.stdin?.write(data.email + "\n");
-				proc.stdin?.end();
-				return;
-			}
-			process.stdout.write(chunk + "\n");
-		});
+	function writeIn(message: string) {
+		proc.stdin?.write(message + "\n");
+	}
 
-		proc.on("close", (code) => {
-			if (code === 0) {
+	if (!proc.stdout || !proc.stdin) {
+		proc.kill();
+		throw new Error("Login failure, can't open new process");
+	}
+
+	let ok: () => void;
+	let er: (err: unknown) => void;
+	let quit = false;
+
+	const promise = new Promise<void>((resolve, reject) => {
+		ok = () => {
+			if (!quit) {
+				quit = true;
 				resolve();
-			} else {
-				reject(Error("Login failure"));
 			}
-		});
+		};
+		er = (err) => {
+			if (!quit) {
+				reject(err);
+			}
+		};
 	});
+
+	proc.stdout.on("data", (chunk) => {
+		chunk = chunk && chunk.toString().trim();
+		switch (chunk) {
+			case "Username:":
+				return writeIn(channel.user);
+			case "Password:":
+				return writeIn(data.password);
+		}
+		if (chunk.startsWith("Email")) {
+			return writeIn(data.email);
+		}
+		if (chunk.includes("Enter one-time password:")) {
+			prompts([
+				{
+					type: "text",
+					message: format("Enter one-time password ({yellow you are using two-factor authentication}):"),
+					name: "code",
+				},
+			])
+				.then((data) => {
+					writeIn(data.code);
+				})
+				.catch((err) => {
+					er(err);
+				});
+			return;
+		}
+		process.stdout.write(chunk + "\n");
+		if (chunk.startsWith("Logged in as")) {
+			return;
+		}
+		er(new Error("Unknown npm answer..."));
+	});
+
+	proc.on("close", (code) => {
+		if (code === 0) {
+			ok();
+		} else {
+			er(new Error("Login failure"));
+		}
+	});
+
+	return promise;
 }
 
 async function getNpmUser(channel: ConfigChannel) {

@@ -42,7 +42,6 @@ cmd("release")
 	.option("--channel", {
 		alt: "-C",
 		type: "multiple",
-		required: true,
 		description: "NPM channel(s) (default 'global')",
 	})
 	.action(releaseCommand);

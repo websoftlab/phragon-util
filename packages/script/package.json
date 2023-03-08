@@ -5,8 +5,8 @@
 	"license": "MIT",
 	"keywords": ["phragon", "phragon-chakra", "chakra"],
 	"scripts": {
-		"build": "node ../../scripts/lib/build.js",
-		"prettier": "node ../../scripts/lib/build-prettier.js"
+		"build": "phragon-script build --cwd \"../../\" -P @phragon-util/script",
+		"prettier": "phragon-script prettier --cwd \"../../\" -P @phragon-util/script"
 	},
 	"dependencies": {
 		"@phragon/cli-commander": "^0.1.0-beta.11",
