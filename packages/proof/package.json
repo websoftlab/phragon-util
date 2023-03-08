@@ -1,0 +1,25 @@
+{
+	"name": "@phragon-util/proof",
+	"version": "1.0.0",
+	"author": "phragon@websoftlab.com",
+	"license": "MIT",
+	"scripts": {
+		"build": "phragon-script build --cwd \"../../\" -P @phragon-util/proof",
+		"prettier": "phragon-script prettier --cwd \"../../\" -P @phragon-util/proof"
+	},
+	"dependencies": {
+		"@phragon-util/global-var": "*"
+	},
+	"exports": {
+		".": {
+			"require": "./build/index.js"
+		}
+	},
+	"types": "build/index.d.ts",
+	"typesVersions": {
+		"*": {
+			"build/index.d.ts": ["src/index.ts"],
+			"*": ["src/*"]
+		}
+	}
+}
