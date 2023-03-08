@@ -1,0 +1,25 @@
+{
+	"name": "@phragon-util/plain-object",
+	"version": "1.0.0",
+	"author": "phragon@websoftlab.com",
+	"license": "MIT",
+	"scripts": {
+		"build": "phragon-script build --cwd \"../../\" -P @phragon-util/plain-object",
+		"prettier": "phragon-script prettier --cwd \"../../\" -P @phragon-util/plain-object"
+	},
+	"keywords": ["object", "plain-object", "clone", "clone-object"],
+	"dependencies": {},
+	"exports": {
+		"./": "./build/",
+		".": {
+			"require": "./build/index.js"
+		}
+	},
+	"types": "build/index.d.ts",
+	"typesVersions": {
+		"*": {
+			"build/index.d.ts": ["src/index.ts"],
+			"*": ["src/*"]
+		}
+	}
+}
