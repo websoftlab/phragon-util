@@ -1,0 +1,22 @@
+{
+	"src": [
+		{
+			"target": "node",
+			"output": "."
+		},
+		{
+			"target": "types",
+			"output": ".",
+			"package.json": {
+				"types": "./index.d.ts"
+			}
+		}
+	],
+	"global.d.ts": {
+		"target": "copy",
+		"output": "global.d.ts",
+		"package.json": {
+			"types": "./global.d.ts"
+		}
+	}
+}
