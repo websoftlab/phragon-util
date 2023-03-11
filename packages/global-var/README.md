@@ -40,7 +40,13 @@ const __ENV__: "production" | "development";
 ## Functions:
 
 ```typescript
-import { __isDev__, __isProd__, __isWeb__, __isSrv__, __env__ } from "@phragon-util/global-var";
+import { defineGlobal, __isDev__, __isProd__, __isWeb__, __isSrv__, __env__ } from "@phragon-util/global-var";
+
+// Define all global variables if they don't exist. 
+// This function is automatically added to the PhragonJS build.
+// Works only on the server side (NodeJS), in the client side the functions and the variables 
+// will be removed and replaced with static values.
+defineGlobal();
 
 // Environment Mode - Developer
 __isDev__();
