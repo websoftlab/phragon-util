@@ -10,9 +10,14 @@
 	"keywords": ["object", "plain-object", "clone", "clone-object"],
 	"dependencies": {},
 	"exports": {
-		"./": "./build/",
 		".": {
 			"require": "./build/index.js"
+		},
+		"./isPlainObject": {
+			"require": "./build/isPlainObject.js"
+		},
+		"./clonePlainObject": {
+			"require": "./build/clonePlainObject.js"
 		}
 	},
 	"types": "build/index.d.ts",
