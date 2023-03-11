@@ -1,4 +1,5 @@
 export {};
+export * from "./index";
 
 declare global {
 	export var __DEV__: boolean;
