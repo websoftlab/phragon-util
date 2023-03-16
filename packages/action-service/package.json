@@ -1,0 +1,46 @@
+{
+	"name": "@phragon-util/action-service",
+	"version": "1.0.0",
+	"author": "phragon@websoftlab.com",
+	"license": "MIT",
+	"scripts": {
+		"build": "phragon-script build --cwd \"../../\" -P @phragon-util/action-service",
+		"prettier": "phragon-script prettier --cwd \"../../\" -P @phragon-util/action-service"
+	},
+	"dependencies": {
+		"@phragon-util/plain-object": "*",
+		"@phragon-util/proof": "*"
+	},
+	"devDependencies": {
+		"hotkeys-js": "^3.10.1"
+	},
+	"peerDependencies": {
+		"hotkeys-js": "^3.10.1"
+	},
+	"peerDependenciesMeta": {
+		"hotkeys-js": {
+			"optionale": true
+		}
+	},
+	"exports": {
+		".": {
+			"require": "./build/index.js"
+		},
+		"./util": {
+			"require": "./build/util.js"
+		},
+		"./ActionService": {
+			"require": "./build/ActionService.js"
+		},
+		"./actions": {
+			"require": "./build/actions/index.js"
+		}
+	},
+	"types": "build/index.d.ts",
+	"typesVersions": {
+		"*": {
+			"build/index.d.ts": ["src/index.ts"],
+			"*": ["src/*"]
+		}
+	}
+}
