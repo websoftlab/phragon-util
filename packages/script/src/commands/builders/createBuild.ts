@@ -1,12 +1,12 @@
 import type { BundleEntity, BundleJson, Config, WorkspacePackageDetail } from "../../types";
 import { clear, isObj } from "../../utils";
 import { newError } from "../../color";
-import { mkdir } from "fs/promises";
+import { mkdir, readdir, readFile, stat } from "fs/promises";
 import debug from "../../debug";
 import types from "./types";
 import babel from "./babel";
 import prettier from "./prettier";
-import { basename } from "path";
+import { join, basename, relative, sep } from "path";
 import deepmerge from "deepmerge";
 
 function resort(origin: Record<string, string>) {
@@ -106,6 +106,31 @@ async function buildBy(config: Config, pg: WorkspacePackageDetail, entity: Bundl
 
 const validTarget = ["types", "module", "node", "commonjs", "copy"];
 
+async function findBabelRuntime(src: string) {
+	const files = await readdir(src);
+	if (!files.length) {
+		return false;
+	}
+	for (const file of files) {
+		if (file.startsWith(".")) {
+			continue;
+		}
+		const srcFile = join(src, file);
+		const info = await stat(srcFile);
+		if (info.isDirectory()) {
+			if (await findBabelRuntime(srcFile)) {
+				return true;
+			}
+		} else if (info.isFile() && file.endsWith(".js")) {
+			const data = (await readFile(srcFile)).toString();
+			if (data.includes('require("@babel/runtime')) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 export default async function createBuild(config: Config, pg: WorkspacePackageDetail, deps: Record<string, string>) {
 	const bundleFile = pg.cwdPath("bundle.json");
 	const stat = await config.stat(bundleFile);
@@ -168,12 +193,53 @@ export default async function createBuild(config: Config, pg: WorkspacePackageDe
 		await mkdir(pg.tmp);
 	}
 
+	async function mkType(entity: BundleEntity, type: "commonjs" | "module" | "types") {
+		const additional = new Map();
+
+		// normalize my\name -> my/name
+		let ref = relative(pg.tmpPath("."), entity.output);
+		if (ref && sep !== "/") {
+			ref = ref.replace(sep, "/");
+		}
+
+		if (type === "types") {
+			const file = ref ? `./${ref}/index.d.ts` : "./index.d.ts";
+			if (await config.exists(pg.tmpPath(file))) {
+				additional.set("types", file);
+			}
+		} else {
+			const point = type === "commonjs" ? "main" : "module";
+			const file = ref ? `./${ref}/index.js` : "./index.js";
+			if (ref) {
+				await config.writeJson(pg.tmpPath(`${ref}/package.json`), { type });
+			} else if (type === "module") {
+				additional.set("type", "module");
+			}
+			if (await config.exists(pg.tmpPath(file))) {
+				additional.set(point, file);
+			}
+		}
+
+		if (additional.size) {
+			append.push(Object.fromEntries(additional));
+		}
+	}
+
 	// make entities
 	for (const entity of entities) {
 		await buildBy(config, pg, entity);
-		if (["commonjs"].includes(entity.target)) {
+		if (["commonjs", "node"].includes(entity.target)) {
 			babelRuntime = true;
+			await mkType(entity, "commonjs");
+		} else if (entity.target === "module") {
+			await mkType(entity, "module");
+		} else if (entity.target === "types") {
+			await mkType(entity, "types");
 		}
+	}
+
+	if (babelRuntime) {
+		babelRuntime = await findBabelRuntime(pg.tmpPath("."));
 	}
 
 	// write package.json file

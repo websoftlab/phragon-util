@@ -85,7 +85,7 @@ export interface BundleVersionJson {
 	ignoreChannel?: string[];
 }
 
-export type BundleTargetType = "commonjs" | "node" | "types" | "copy";
+export type BundleTargetType = "commonjs" | "module" | "node" | "types" | "copy";
 
 export interface BundleTarget {
 	target: BundleTargetType;
