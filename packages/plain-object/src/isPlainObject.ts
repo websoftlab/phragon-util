@@ -10,7 +10,7 @@ function isObject(o: any): boolean {
 	return Object.prototype.toString.call(o) === "[object Object]";
 }
 
-export function isPlainObject(o: any): boolean {
+export function isPlainObject<Object extends {} = any>(o: any): o is Object {
 	if (o == null || !isObject(o)) return false;
 
 	// If has modified constructor

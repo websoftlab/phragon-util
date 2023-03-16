@@ -1,2 +1,2 @@
 export { isPlainObject } from "./isPlainObject";
-export { clonePlainObject } from "./clonePlainObject";
+export { clonePlainObject, clonePlainArray } from "./clonePlainObject";
