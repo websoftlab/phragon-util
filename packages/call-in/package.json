@@ -1,0 +1,23 @@
+{
+	"name": "@phragon-util/call-in",
+	"version": "1.0.0",
+	"author": "phragon@websoftlab.com",
+	"license": "MIT",
+	"scripts": {
+		"build": "phragon-script build --cwd \"../../\" -P @phragon-util/call-in",
+		"prettier": "phragon-script prettier --cwd \"../../\" -P @phragon-util/call-in"
+	},
+	"dependencies": {},
+	"exports": {
+		".": {
+			"require": "./build/index.js"
+		}
+	},
+	"types": "build/index.d.ts",
+	"typesVersions": {
+		"*": {
+			"build/index.d.ts": ["src/index.ts"],
+			"*": ["src/*"]
+		}
+	}
+}
