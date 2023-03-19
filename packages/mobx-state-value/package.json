@@ -1,0 +1,28 @@
+{
+	"name": "@phragon-util/mobx-state-value",
+	"version": "1.0.0",
+	"author": "phragon@websoftlab.com",
+	"license": "MIT",
+	"scripts": {
+		"build": "phragon-script build --cwd \"../../\" -P @phragon-util/mobx-state-value",
+		"prettier": "phragon-script prettier --cwd \"../../\" -P @phragon-util/mobx-state-value"
+	},
+	"devDependencies": {
+		"mobx": "^6.4.0"
+	},
+	"peerDependencies": {
+		"mobx": "^6.4.0"
+	},
+	"exports": {
+		".": {
+			"require": "./build/index.js"
+		}
+	},
+	"types": "build/index.d.ts",
+	"typesVersions": {
+		"*": {
+			"build/index.d.ts": ["src/index.ts"],
+			"*": ["src/*"]
+		}
+	}
+}
