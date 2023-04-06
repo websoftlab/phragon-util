@@ -39,8 +39,21 @@ export async function boilerplateCommand(_: never, option: BoilerplateCommandOpt
 			name: "organisation",
 			initial: true,
 		},
+		{
+			type: "confirm",
+			message: "Use esm module?",
+			name: "esm",
+			initial: false,
+		},
+		{
+			type: "confirm",
+			message: "Use './global.d.ts' helper file?",
+			name: "typeHelper",
+			initial: false,
+		},
 	]);
 
+	const { esm, typeHelper } = data;
 	let { name } = data;
 	if (data.organisation) {
 		name = `${config.workspace.name}/${name}`;
@@ -73,10 +86,7 @@ export async function boilerplateCommand(_: never, option: BoilerplateCommandOpt
 	await mkDir(config, directory);
 	await mkDir(config, join(directory, "src"));
 
-	await mkFile(config, join(directory, "src/index.ts"), "export {}");
-	await mkFile(config, join(directory, "global.d.ts"), "");
-	await mkFile(config, join(directory, "bundle-version.json"), { version });
-	await mkFile(config, join(directory, "bundle.json"), {
+	const bundleJson = {
 		src: [
 			{
 				target: "node",
@@ -85,12 +95,24 @@ export async function boilerplateCommand(_: never, option: BoilerplateCommandOpt
 			{
 				target: "types",
 				output: ".",
-				"package.json": {
-					types: "./index.d.ts",
-				},
 			},
 		],
-	});
+	};
+
+	if (esm) {
+		bundleJson.src.splice(1, 0, {
+			target: "module",
+			output: "./esm",
+		});
+	}
+
+	await mkFile(config, join(directory, "src/index.ts"), "export {}");
+	await mkFile(config, join(directory, "bundle-version.json"), { version, ignoreChannel: [], release: {} });
+	await mkFile(config, join(directory, "bundle.json"), bundleJson);
+
+	if (typeHelper) {
+		await mkFile(config, join(directory, "global.d.ts"), "");
+	}
 
 	await mkFile(config, join(directory, "tsconfig.json"), {
 		extends: `${rel}tsconfig.json`,
@@ -102,7 +124,7 @@ export async function boilerplateCommand(_: never, option: BoilerplateCommandOpt
 			outDir: `./${config.bundle.out}`,
 			rootDir: "./src",
 		},
-		include: ["./src/**/*", "./global.d.ts"],
+		include: typeHelper ? ["./src/**/*", "./global.d.ts"] : ["./src/**/*"],
 	});
 
 	await mkFile(
@@ -126,7 +148,7 @@ $ npm install --save ${name}
 
 	await mkFile(config, join(directory, "package.json"), {
 		name,
-		version: "1.0.0",
+		version,
 		author: config.bundle.author,
 		license: config.bundle.license,
 		scripts: {
@@ -135,7 +157,6 @@ $ npm install --save ${name}
 		},
 		dependencies: {},
 		exports: {
-			"./": "./build/",
 			".": {
 				require: "./build/index.js",
 			},

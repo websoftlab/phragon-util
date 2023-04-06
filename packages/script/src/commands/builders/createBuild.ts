@@ -123,7 +123,7 @@ async function findBabelRuntime(src: string) {
 			}
 		} else if (info.isFile() && file.endsWith(".js")) {
 			const data = (await readFile(srcFile)).toString();
-			if (data.includes('require("@babel/runtime')) {
+			if (data.includes('require("@babel/runtime/helpers/') || data.includes('from "@babel/runtime/helpers/')) {
 				return true;
 			}
 		}

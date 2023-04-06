@@ -9,11 +9,10 @@
 		"prettier": "phragon-script prettier --cwd \"../../\" -P @phragon-util/script"
 	},
 	"dependencies": {
-		"@phragon/cli-commander": "^0.1.0-beta.11",
+		"@phragon/cli-commander": "^0.1.1",
 		"@babel/cli": "^7.21.0",
 		"@babel/core": "^7.21.0",
 		"@babel/node": "^7.20.7",
-		"@babel/plugin-transform-typescript": "^7.21.0",
 		"@babel/plugin-proposal-class-properties": "^7.18.6",
 		"@babel/plugin-proposal-object-rest-spread": "^7.20.7",
 		"@babel/plugin-proposal-private-methods": "^7.18.6",
@@ -25,6 +24,7 @@
 		"@babel/runtime": "^7.21.0",
 		"babel-plugin-optimize-clsx": "^2.6.2",
 		"babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+		"babel-plugin-add-import-extension": "^1.6.0",
 		"prompts": "^2.4.2",
 		"rimraf": "^3.0.2",
 		"cross-spawn": "^7.0.3",

@@ -154,15 +154,17 @@ export async function increment(pg: WorkspacePackageDetail): Promise<Version> {
 		if (ver.preRelease.name !== "alpha") addChoice("change to -alpha.0 pre-release", "pre-release", "alpha");
 		if (ver.preRelease.name !== "beta") addChoice("change to -beta.0 pre-release", "pre-release", "beta");
 		if (ver.preRelease.name !== "rs") addChoice("change to -rs.0 pre-release", "pre-release", "rs");
-	} else {
-		addChoice("add -alpha.0 pre-release", "pre-release", "alpha");
-		addChoice("add -beta.0 pre-release", "pre-release", "beta");
-		addChoice("add -rs.0 pre-release", "pre-release", "rs");
 	}
 
 	addChoice("patch version", "patch");
 	addChoice("minor version", "minor");
 	addChoice("major version", "major");
+
+	if (!ver.preRelease) {
+		addChoice("add -alpha.0 pre-release", "pre-release", "alpha");
+		addChoice("add -beta.0 pre-release", "pre-release", "beta");
+		addChoice("add -rs.0 pre-release", "pre-release", "rs");
+	}
 
 	const question = await prompts({
 		type: "select",

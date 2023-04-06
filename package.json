@@ -21,7 +21,7 @@
 	"author": "phragon@websoftlab.com",
 	"license": "MIT",
 	"dependencies": {
-		"@phragon-util/script": "^0.0.5"
+		"@phragon-util/script": "^0.0.7"
 	},
 	"devDependencies": {
 		"@types/node": "^14.14.31"

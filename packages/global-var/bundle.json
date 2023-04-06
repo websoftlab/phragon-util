@@ -6,17 +6,11 @@
 		},
 		{
 			"target": "types",
-			"output": ".",
-			"package.json": {
-				"types": "./index.d.ts"
-			}
+			"output": "."
 		}
 	],
 	"global.d.ts": {
 		"target": "copy",
-		"output": "global.d.ts",
-		"package.json": {
-			"types": "./global.d.ts"
-		}
+		"output": "global.d.ts"
 	}
 }
